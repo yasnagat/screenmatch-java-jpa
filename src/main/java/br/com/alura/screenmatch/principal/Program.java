@@ -3,8 +3,11 @@ package br.com.alura.screenmatch.principal;
 import br.com.alura.screenmatch.model.SeasonsData;
 import br.com.alura.screenmatch.model.Serie;
 import br.com.alura.screenmatch.model.SeriesData;
+import br.com.alura.screenmatch.repository.SerieRepository;
 import br.com.alura.screenmatch.service.APIConsumer;
 import br.com.alura.screenmatch.service.DataConverter;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.autoconfigure.AutoConfigureOrder;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -18,8 +21,14 @@ public class Program {
 
     private final String ADDRESS = "https://www.omdbapi.com/?t=";
     private final String API_KEY = "&apikey=6585022c";
-
     private final List<SeriesData> seriesData = new ArrayList<>();
+
+
+    private final SerieRepository repository;
+
+    public Program(SerieRepository repository) {
+        this.repository = repository;
+    }
 
     public void menuExibit() {
         var option = -1;
@@ -48,16 +57,20 @@ public class Program {
             }
         }
     }
-        // modularização: criação de funções para lidar com operações do código
-        // busca a serie por meio do metodo getSeriesData, que vai consultar a API por meio dos métodos criados no começo
-        // acrescenta a serie à lista criada no começo
         private void searchSerie() {
             SeriesData data = getSeriesData();
-            seriesData.add(data);
+            // seriesData.add(data);
+
+            // chama o repositorio para passar a guardar os dados requeridos no banco de dados em vez de uma lista
+            // não é possível instanciar um repositorio de interface que herda de uma outra interface.
+            // injeção de dependência:
+
+            Serie serie = new Serie(data);
+            repository.save(serie);
             System.out.println(data);
         }
 
-        // metodo de consulta à API e converte os dados JSON
+        // metodo de consulta à API e converte os dados JSONq
         private SeriesData getSeriesData() {
             System.out.print("Insira o nome que você quer buscar: ");
             var name = read.nextLine();

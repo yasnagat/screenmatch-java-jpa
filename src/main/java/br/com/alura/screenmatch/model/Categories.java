@@ -15,6 +15,7 @@ public enum Categories {
     Categories(String categoriaOmdb) {
         this.categoriaOmdb = categoriaOmdb;
     }
+
     // percorre a lista das constantes e identifica a correspondencia com os generos definidos
     // quando encontra, faz a transformacao
     public static Categories fromString(String text) {

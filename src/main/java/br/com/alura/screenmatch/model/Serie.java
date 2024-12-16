@@ -2,17 +2,40 @@ package br.com.alura.screenmatch.model;
 
 import br.com.alura.screenmatch.service.translator.MyMemoryRequest;
 
-import java.util.OptionalDouble;
+import jakarta.persistence.*;
 
-// classe nova criada para tratar os dados buscados na API
+import java.util.ArrayList;
+import java.util.List;
+import java.util.OptionalDouble;
+// anotacao para criar correspondencia com o bd pelo JPA
+@Entity
+// anotacao para alterar o nome no banco de dados
+@Table(name = "series")
+
 public class Serie {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @Column(unique = true, nullable = false)
     private String title;
     private Integer totalSeasons;
     private Double rate;
+
+    @Enumerated(EnumType.STRING)
     private Categories genre;
+
     private String actors;
     private String poster;
     private String plot;
+
+    public Serie() {
+
+    }
+
+    @Transient // ignora para não persistir no banco
+    private List<Episode> episodes = new ArrayList<>();
+
 
     public String getTitle() {
         return title;
@@ -94,6 +117,7 @@ public class Serie {
         this.genre = Categories.fromString(seriesData.genre().split(",")[0].trim());
         this.actors = seriesData.actors();
         this.poster = seriesData.poster();
+        // traduz a sinopse
         this.plot = MyMemoryRequest.translate(seriesData.plot()).trim(); // trim para nao ter espaço em branco nem quebra de linha
     }
 
