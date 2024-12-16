@@ -93,7 +93,6 @@ public class Program {
             season.forEach(System.out::println);
         }
 
-        // funcao para mostrar as informações de todas as series buscadas durante a execução do programa
         private void listSeries() {
             List<Serie> series = new ArrayList<>();
 
